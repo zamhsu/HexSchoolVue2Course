@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/stylesheets/all.css">
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>    <script src="/javascripts/vendor.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>    
+    <script src="/javascripts/vendor.js"></script>
 
   </head>
   
@@ -147,12 +148,39 @@
 </div>
 
 
-<div>
+<div id="app">
+  {{text}}
 
+  <!-- <div id="app2">
+    錯誤方式，不可建立巢狀應用程式
+    {{text}}
+    <br>
+    {{text2}}
+  </div> -->
+</div>
+<div id="app2">
+  {{text}}
+  <br>
+  <span class="text-danger">{{text2}}</span>
 </div>
 
-
 <script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    text: '這裡是一段話'
+  }
+})
+
+var app2 = new Vue({
+  el: '#app2',
+  data: {
+    text: '第2個應用程式。(可行，但通常使用1個)',
+    text2: '不可建立巢狀應用程式'
+  }
+})
+
+//answer  
 // var data = {
 //   text: '這是一段話'
 // }
