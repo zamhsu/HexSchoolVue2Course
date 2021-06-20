@@ -148,11 +148,41 @@
 </div>
 
 <div id="app">
-  <input type="text" class="form-control" v-model="text">
-  <button class="btn btn-primary mt-1">反轉字串</button>
-  <div class="mt-3">
+  <input type="text" class="form-control" @keyup.enter="reverseText" v-model="text" placeholder="按enter即可送出">
+  <a :href="link" class="btn btn-primary mt-1" @click.prevent="reverseText">反轉字串</a>
+  <a :href="link" class="btn btn-primary mt-1">Go To Google</a>
+  <div class="mt-3 mb-3">
     {{ newText }}
   </div>
+  <p>結果：a標籤不會跳轉網頁（觸發事件）</p>
+  <p>
+    寫法：
+    <ul>
+      <li>v-on:click.prevent=""</li>
+      <li>
+        <pre>
+methods: {
+  reverseText(event) {
+    event.preventDefault();
+    this.newText = this.text.split('').reverse().join('');
+  }
+}
+        </pre>
+      </li>
+    </ul>
+    <a href="https://vuejs.org/v2/guide/events.html#Event-Modifiers">vue 官方說明</a>
+  </p>
+  <p>
+    prevevtDefault：如果事件可以被取消，就取消事件（即取消事件的預設行為）。但不會影響事件的傳遞，事件仍會繼續傳遞。
+    <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Event/preventDefault">說明</a>
+  </p>
+  <p>
+    縮寫
+    <ul>
+      <li>v-on == @</li>
+      <li>v-bind == :</li>
+    </ul>
+  </p>
 </div>
 
 <script>
@@ -160,11 +190,15 @@ var app = new Vue({
   el: '#app',
   data: {
     text: '',
-    newText: ''
+    newText: '',
+    link: 'https://www.google.com.tw'
   },
   // 請在此撰寫 JavaScript
   methods: {
     reverseText(event) {
+      //js寫法
+      //event.preventDefault();
+
       this.newText = this.text.split('').reverse().join('');
     }
   }
@@ -183,6 +217,8 @@ reverseText(event) {
   {{ newText }}
 </div>
 --> 
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         </div>
       </div>
     </div>
