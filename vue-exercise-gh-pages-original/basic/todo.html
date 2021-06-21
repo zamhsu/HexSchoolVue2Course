@@ -159,22 +159,24 @@
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="#">全部</a>
+          <a class="nav-link" :class="{'active': visiblity == 'all'}" @click="visiblity = 'all'" href="#">全部</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">進行中</a>
+          <a class="nav-link" :class="{'active': visiblity == 'active'}" @click="visiblity = 'active'" href="#">進行中</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">已完成</a>
+          <a class="nav-link" :class="{'active': visiblity == 'complete'}" @click="visiblity = 'complete'" href="#">已完成</a>
         </li>
       </ul>
     </div>
     <ul class="list-group list-group-flush text-left">
-      <li class="list-group-item" v-for="(todo, index) in todos">
+      <li class="list-group-item" v-for="(todo, index) in filteredTodos">
         <div class="d-flex">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" v-model="todo.compleled" :id="todo.id">
-            <label class="form-check-label" :for="todo.id">
+            <label class="form-check-label" 
+            :class="{'completed': todo.compleled}" 
+            :for="todo.id">
               {{todo.title}}
             </label>
           </div>
@@ -218,7 +220,8 @@ var app = new Vue({
         title: '代辦事項',
         compleled: false
       }
-    ]
+    ],
+    visiblity: 'all'
   },
   methods: {
     addTodo: function() {
@@ -239,6 +242,35 @@ var app = new Vue({
     },
     removeTodo: function(index) {
       this.todos.splice(index, 1);
+    }
+  },
+  computed: {
+    filteredTodos: function() {
+      if (this.visiblity == 'all') {
+        return this.todos;
+      }
+      else if (this.visiblity == 'active') {
+        var activeTodos = [];
+        this.todos.forEach(q => {
+          if (!q.compleled) {
+            activeTodos.push(q);
+          }
+        });
+
+        return activeTodos;
+      }
+      else if (this.visiblity == 'complete') {
+        var completedTodos = [];
+        this.todos.forEach(q => {
+          if (q.compleled) {
+            completedTodos.push(q);
+          }
+        });
+
+        return completedTodos;
+      }
+      
+      return [];
     }
   }
 });
