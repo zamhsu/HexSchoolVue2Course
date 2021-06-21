@@ -170,8 +170,8 @@
       </ul>
     </div>
     <ul class="list-group list-group-flush text-left">
-      <li class="list-group-item" v-for="(todo, index) in filteredTodos">
-        <div class="d-flex">
+      <li class="list-group-item" v-for="(todo, index) in filteredTodos" @dblclick="editTodo(todo)">
+        <div class="d-flex" v-if="todo.id !== cacheTodo.id">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" v-model="todo.compleled" :id="todo.id">
             <label class="form-check-label" 
@@ -184,22 +184,11 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-      </li>
-      <!-- <li class="list-group-item">
-        <div class="d-flex">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="a1">
-            <label class="form-check-label completed" for="a1">
-              Cras justo odio
-            </label>
-          </div>
-          <button type="button" class="close ml-auto" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </li> -->
-      <li class="list-group-item">
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" 
+        v-model="cacheTitle"
+        @keyup.esc="cancelEdit()"
+        @keyup.enter="doneEdit(todo)"
+        v-if="todo.id === cacheTodo.id">
       </li>
     </ul>
     <div class="card-footer d-flex justify-content-between">
@@ -221,6 +210,8 @@ var app = new Vue({
         compleled: false
       }
     ],
+    cacheTodo: {},
+    cacheTitle: '',
     visiblity: 'all'
   },
   methods: {
@@ -239,6 +230,18 @@ var app = new Vue({
       });
 
       this.newTodo = '';
+    },
+    editTodo: function(selectedTodo) {
+      this.cacheTodo = selectedTodo;
+      this.cacheTitle = selectedTodo.title;
+    },
+    doneEdit: function(selectedTodo) {
+      selectedTodo.title = this.cacheTitle;
+      this.cacheTitle = '';
+      this.cacheTodo = {};
+    },
+    cancelEdit: function() {
+      this.cacheTodo = {};
     },
     removeTodo: function(index) {
       this.todos.splice(index, 1);
