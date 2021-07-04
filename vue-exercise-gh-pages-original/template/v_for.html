@@ -123,24 +123,29 @@
   <h4>Key</h4>
   <p>請在範例上補上 key，並觀察其差異</p>
   <ul>
-    <li v-for="(item, key) in arrayData">
+    <!--使用for枚舉的陣列有排序異動時，
+      會使用快速置換的方式修改DOM。
+      如果有input時會導致input的value不會置換，
+      使用key即可解決，
+      key值須為唯一值-->
+    <li v-for="(item, key) in arrayData" :key="item.age">
       {{ key }} - {{ item.name }} {{ item.age }} 歲 <input type="text">
     </li>
   </ul>
-  <button class="btn btn-outline-primary">反轉陣列</button>
+  <button class="btn btn-outline-primary" @click="reverseArray()">反轉陣列</button>
 
   <h4>Filter</h4>
   <p>請製作過濾資料</p>
-  <input type="text" class="form-control" v-model="filterText">
+  <input type="text" class="form-control" @keyup.enter="filterData" v-model="filterText">
   <ul>
-    <li v-for="(item, key) in arrayData" :key="item.age">
+    <li v-for="(item, key) in filterArray" :key="item.age">
       {{ key }} - {{ item.name }} {{ item.age }} 歲 <input type="text">
     </li>
   </ul>
 
   <h4>不能運作的狀況</h4>
   <p>講師說明</p>
-  <button class="btn btn-outline-primary">無法運行</button>
+  <button class="btn btn-outline-primary" @click="cantWork">無法運行</button>
   <ul>
     <li v-for="(item, key) in arrayData" :key="item.age">
       {{ key }} - {{ item.name }} {{ item.age }} 歲 <input type="text">
@@ -157,13 +162,20 @@
   <h4>Template 的運用</h4>
   <p>請將兩個 tr 一組使用 v-for</p>
   <table class="table">
-    
+    <template v-for="item in arrayData">
+      <tr>
+        <td>{{item.age}}</td>
+      </tr>
+      <tr>
+        <td>{{item.name}}</td>
+      </tr>
+    </template>
   </table>
 
   <h4>v-for 與 v-if</h4>
   <p>請加上 v-if 判斷式</p>
   <ul>
-    <li v-for="(item, key) in arrayData">
+    <li v-for="(item, key) in arrayData" v-if="item.age <= 20">
       {{ key }} - {{ item.name }} {{ item.age }} 歲
     </li>
   </ul>
@@ -171,7 +183,7 @@
   <h4>v-for 與 元件</h4>
   <p>講師說明</p>
   <ul>
-    <list-item :item="item" v-for="(item, key) in arrayData"></list-item>
+    <list-item :item="item" v-for="(item, key) in arrayData" :key="item.age"></list-item>
   </ul>
   <p>注意：現在建議元件使用 v-for 都加上 key。<a href="https://cn.vuejs.org/v2/guide/list.html#%E4%B8%80%E4%B8%AA%E7%BB%84%E4%BB%B6%E7%9A%84-v-for">參考</a></p>
 </div>
@@ -222,6 +234,38 @@ var app = new Vue({
   },
   methods: {
     // 請在此練習 JavaScript
+
+    reverseArray: function () {
+      this.arrayData.reverse();
+      console.log(this.arrayData);
+    },
+    filterData: function () {
+      this.filterArray = this.arrayData.filter(q => 
+      {
+        console.log(this.filterText, q.name, q.name.match(this.filterText));
+        return q.name.match(this.filterText);
+      })
+    },
+    cantWork: function () {
+      //直接將陣列清空/修改值後，v-for裡的內容不會同時改變，仍然是渲染後的值(不會執行綁定)
+
+      //情況一：清空陣列
+      //this.arrayData.length = 0; //清空陣列
+
+      //情況二：修改陣列值
+      // this.arrayData[0] = {
+      //   name: '小強',
+      //   age: 18
+      // }
+      
+      //解法：使用Vue.set將值寫入Vue的資料裡，使得Vue可以重新監控
+      //https://vuejs.org/v2/api/#Vue-set
+      //語法：Vue.set(target, propertyName/index, value)
+      Vue.set(this.arrayData, 0, {
+        name: '小強',
+        age: 18
+      })
+    }
 
     // 解答：
     // reverseArray: function () {
