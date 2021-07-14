@@ -120,11 +120,12 @@
   <hr>
   <select name="" id="" class="form-control" v-model="selected2">
     <option disabled value="">請選擇</option>
+    <option v-for="item in selectData" :value="item">{{item}}</option>
   </select>
   <p>小明喜歡的女生是 {{ selected2 }}。</p>
   <hr>
   <h4 class="mt-3">多選</h4>
-  <select name="" id="" class="form-control" v-model="multiSelected">
+  <select name="" id="" class="form-control" multiple v-model="multiSelected">
     <option value="小美">小美</option>
     <option value="可愛小妞">可愛小妞</option>
     <option value="漂亮阿姨">漂亮阿姨</option>
@@ -133,18 +134,21 @@
   <hr>
   <h4 class="mt-3">複選框</h4>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="sex" v-model="sex">
+    <input type="checkbox" class="form-check-input" id="sex" v-model="sex" true-value="男生" false-value="女生">
     <label class="form-check-label" for="sex">{{ sex }}</label>
   </div>
   <h4 class="mt-3">修飾符</h4>
+  <p>v-model.lazy 延後同步(接近使用on change的方式同步)，點輸入框外才同步</p>
   {{ lazyMsg }}
-  <input type="text" class="form-control" v-model="lazyMsg">
+  <input type="text" class="form-control" v-model.lazy="lazyMsg">
   <br>
-  <pre>{{ age }}</pre>
-  <input type="number" class="form-control" v-model="age">
+  <p>v-model.number 數字字串轉數字，並強制限制只能輸入數字</p>
+  <pre>{{ typeof(age) }} {{ age }}</pre>
+  <input type="number" class="form-control" v-model.number="age">
   <br>
-  {{ trimMsg }}緊黏的文字
-  <input type="text" class="form-control" v-model="trimMsg">
+  <p>v-model.trim 去除頭尾空白</p>
+  緊黏的文字頭{{ trimMsg }}緊黏的文字尾
+  <input type="text" class="form-control" v-model.trim="trimMsg">
 </div>
 
 <script>
