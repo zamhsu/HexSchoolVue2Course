@@ -119,16 +119,19 @@
     <thead>
       <tr>
         <th>品名</th>
-        <th class="click">價格 
+        <th class="click" @click="orderPrice">價格 
           <!-- isReverse 為反轉 className -->
-          <span class="icon isReverse">
+          <span :class="{'icon': true, 'inverse': isReverse}" v-if="orderTarget == 'price'">
             <i class=" fas fa-angle-up text-success"></i>
           </span>
         </th>
-        <th class="click">到期日 
+        <th class="click" @click="orderExpiryDate">到期日 
+          <span :class="{'icon': true, 'inverse': isReverse}" v-if="orderTarget == 'expiryDate'">
+            <i class=" fas fa-angle-up text-success"></i>
+          </span>
         </th>
       </tr>
-      <tr v-for="item in data">
+      <tr v-for="item in orderData">
         <td>{{ item.name }}</td>
         <td>{{ item.price }}</td>
         <td>{{ item.expiryDate }}</td>
@@ -180,9 +183,50 @@ var app = new Vue({
         expiryDate: 200
       }
     ],
+    isReverse: true,
+    orderTarget: '',
   },
   // 請在此撰寫 JavaScript
-  computed: {}
+  methods: {
+    orderPrice() {
+      this.orderTarget = 'price';
+      this.isReverse = !this.isReverse;
+
+      console.log('isPriceReverse', this.isReverse);
+      console.log('orderTarget', this.orderTarget);
+    },
+    orderExpiryDate() {
+      this.orderTarget = 'expiryDate';
+      this.isReverse = !this.isReverse;
+
+      console.log('isExpiryDateReverse', this.isReverse);
+      console.log('orderTarget', this.orderTarget);
+    }
+  },
+  computed: {
+    orderData: function () {
+      var self = this;
+      let order = 0; //0=維持現狀
+
+      if(this.isReverse) {
+        //1=低到高
+        order = 1;
+      }
+      else {
+        //-1=高到低
+        order = -1;
+      }
+
+      console.log('computed.orderData is active');
+
+      return this.data.sort(function (a, b){
+        var a = a[self.orderTarget];
+        var b = b[self.orderTarget];
+
+        return (a === b ? 0 : a > b ? 1 : -1) * order;
+      });
+    }
+  }
 });
 </script>
 
