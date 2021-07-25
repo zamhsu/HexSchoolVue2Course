@@ -128,16 +128,40 @@
     <thead>
     </thead>
     <tbody>
-      <tr v-for="(item, key) in data" :item="item" :key="key">
+      <!-- item(外層)資料傳入元件，用person接收 -->
+      <!-- <row-component v-for="(item, key) in data" :person="item" :key="key"></row-component> -->
+      <!-- is為動態切換模板用 -->
+      <tr is="row-component" v-for="(item, key) in data" :person="item" :key="key"></tr>
+      <!-- <tr v-for="(item, key) in data" :item="item" :key="key">
         <td>{{ item.name }}</td>
         <td>{{ item.cash }}</td>
         <td>{{ item.icash }}</td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 </div>
 
+<script type="text/x-template" id="rowComponent">
+  <tr>
+    <td>{{ person.name }}</td>
+    <td>{{ person.cash }}</td>
+    <td>{{ person.icash }}</td>
+  </tr>
+</script>
+
 <script>
+//全域註冊
+// Vue.component('row-component', {
+//   props: ['person'],
+//   template: '#rowComponent'
+// })
+
+//局部註冊
+var child = {
+  props: ['person'],
+  template: '#rowComponent'
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -163,6 +187,9 @@ var app = new Vue({
         icash: 100,
       },
     ]
+  },
+  components: {
+    "row-component": child //局部註冊
   }
 });
 </script>
