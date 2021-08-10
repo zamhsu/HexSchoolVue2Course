@@ -122,6 +122,8 @@
 
 <div id="app">
   <h2>單向數據流</h2>
+  <!--處理props時，要儘量維持單向數據流(資料只能從父元件傳到子元件)，所以不要在子元件內改變props。
+如果還是要做，在conponent裡使用function return並新建一個變數，來接父級傳來的props，因此可避免與父級的資料綁定。-->
   <photo :img-url="url"></photo>
   <p>修正單向數據流所造成的錯誤</p>
 
@@ -148,7 +150,7 @@
 <script type="text/x-template" id="photo">
 <div>
   <img :src="imgUrl" class="img-fluid" alt="" />
-  <input type="text" class="form-control" v-model="imgUrl">
+  <input type="text" class="form-control" v-model="newUrl">
 </div>
 </script>
 
@@ -170,6 +172,12 @@
 Vue.component('photo', {
   props: ['imgUrl'],
   template: '#photo',
+  data: function () {
+    return {
+      //用新變數接收，與父元件資料解除綁定
+      newUrl: this.imgUrl
+    }
+  }
 
   // 解答：
   // data: function () {
