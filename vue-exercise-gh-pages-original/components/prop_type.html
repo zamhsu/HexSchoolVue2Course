@@ -122,10 +122,10 @@
 
 <div id="app">
   <h2>Props 的型別</h2>
-  <prop-type :cash="cash"></prop-type>
+  <prop-type></prop-type>
 
   <h2 class="mt-3">靜態與動態傳入數值差異</h2>
-  <prop-type cash="300"></prop-type>
+  <prop-type :cash="300"></prop-type>
 </div>
 
 <script type="text/x-template" id="propType">
@@ -137,7 +137,12 @@
 
 <script>
 Vue.component('prop-type', {
-  props: ['cash'],
+  props: {
+    cash: {
+      type: Number, //指定型別
+      default: 300  //預設值
+    }
+  },
 
   // 解答：
   // props: {
