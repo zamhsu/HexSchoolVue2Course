@@ -128,13 +128,21 @@
 </div>
 
 <div id="app">
-  <select name="" id="" class="form-control mb-3">
+  <select name="" id="" class="form-control mb-3" v-model="filter">
     <option value="">--- 請選擇城市 ---</option>
+    <option v-for="item in location" :key="item" :value="item">{{item}}</option>
   </select>
   <div>
     <h4>關注城市</h4>
     <div class="card-columns">
-      <div class="card status-aqi2">
+      <city-card v-for="(item) in stared" 
+        :key="item.SiteId" 
+        :city-card-detail="item"
+        :show-light-star="true"
+        @unstar="moveToData">
+      </city-card>
+
+      <!-- <div class="card status-aqi2">
         <div class="card-header">苗栗縣 - 三義
           <a href="#" class="float-right"><i class="fas fa-star"></i></a>
         </div>
@@ -146,29 +154,106 @@
           </ul>
           2018-05-20 16:00
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   
   <hr>
   <div class="card-columns">
-    <div class="card status-aqi2">
-      <div class="card-header">苗栗縣 - 三義
-        <a href="#" class="float-right"><i class="far fa-star"></i></a>
-      </div>
-      <div class="card-body">
-        <ul class="list-unstyled">
-          <li>AQI 指數: 54</li>
-          <li>PM2.5: 8</li>
-          <li>說明: 普通</li>
-        </ul>
-      2018-05-20 16:00
-      </div>
-    </div>
+    <city-card v-for="(item) in filteredLocation" 
+      :key="item.SiteId" 
+      :city-card-detail="item"
+      :show-light-star="false"
+      @star="moveToStared">
+    </city-card>
   </div>
+
+  <!-- <div class="card status-aqi2">
+    <div class="card-header">苗栗縣 - 三義
+      <a href="#" class="float-right"><i class="far fa-star"></i></a>
+    </div>
+    <div class="card-body">
+      <ul class="list-unstyled">
+        <li>AQI 指數: 54</li>
+        <li>PM2.5: 8</li>
+        <li>說明: 普通</li>
+      </ul>
+    2018-05-20 16:00
+    </div>
+  </div> -->
 </div>
 
+<script type="text/x-template" id="cityCard">
+  <div :class="['card', statusClass]">
+    <div class="card-header">{{cityCardDetail.County}} - {{cityCardDetail.SiteName}}
+      <a href="#" class="float-right" @click.prevent="updateStarCity(cityCardDetail)"><i :class="[starClass]"></i></a>
+    </div>
+    <div class="card-body">
+      <ul class="list-unstyled">
+        <li>AQI 指數: {{cityCardDetail.AQI}}</li>
+        <li>PM2.5: {{cityCardDetail["PM2.5"]}}</li>
+        <li>說明: {{cityCardDetail.Status}}</li>
+      </ul>
+    {{cityCardDetail.PublishTime}}
+    </div>
+  </div>
+</script>
+
 <script>
+Vue.component('city-card',{
+  props: ['cityCardDetail', 'showLightStar'],
+  template: '#cityCard',
+  data: function() {
+    return {
+      statusClass: '',
+      starClass: ''
+    }
+  },
+  mounted() {
+    this.getStatusClass();
+    this.getStarClass();
+  },
+  methods: {
+    getStatusClass: function() {
+      switch (this.cityCardDetail.Status) {
+        case '普通':
+          this.statusClass = 'status-aqi2'
+          break;
+        case '對敏感族群不健康':
+          this.statusClass = 'status-aqi3'
+          break;
+        case '對所有族群不健康':
+          this.statusClass = 'status-aqi4'
+          break;
+        case '非常不健康':
+          this.statusClass = 'status-aqi5'
+          break;
+        case '危害':
+          this.statusClass = 'status-aqi6'
+          break;
+        default:
+          break;
+      }
+    },
+    getStarClass: function() {
+      if (this.showLightStar == true) {
+        this.starClass = 'fas fa-star';
+      }
+      else {
+        this.starClass = 'far fa-star';
+      }
+    },
+    updateStarCity: function(city) {
+      if (this.showLightStar == true) {
+        this.$emit('unstar', city);
+      }
+      else {
+        this.$emit('star', city);
+      }
+    }
+  }
+});
+
 // API 來源
 // https://opendata.epa.gov.tw/Data/Contents/AQI/
 
@@ -181,18 +266,87 @@ var app = new Vue({
     filter: '',
   },
   // 請在此撰寫 JavaScript
-  methods: {
-    getData() {
-      const vm = this;
-      const api = 'http://opendata2.epa.gov.tw/AQI.json';
+  created() {
+    const vm = this;
+    const api = 'http://opendata2.epa.gov.tw/AQI.json';
+    //const api = 'https://cors-anywhere.herokuapp.com/http://opendata2.epa.gov.tw/AQI.json';
 
-      // 使用 jQuery ajax
-      $.get(api).then(function( response ) {
-        vm.data = response;
-        console.log(response)
+    // 使用 jQuery ajax
+    $.get(api).then(function (response) {
+      vm.data = response;
+      console.log(response);
+
+      //縣市下拉選單資料，過濾重複縣市
+      vm.location = [...new Set(vm.data.map(item => item.County))];
+
+      //從localStorage取得先前資料
+      let lastStaredCity = localStorage.getItem('staredCity');
+      let lastStaredCityArr = lastStaredCity ? localStorage.getItem('staredCity').split(',') : [];
+      console.log('lastStaredCity',lastStaredCity);
+      if (lastStaredCity.length > 0) {
+        lastStaredCityArr.forEach(item => {
+          let staredCity = vm.data.find(city => city.SiteId == item);
+          vm.stared.push(staredCity);
+          vm.removeOneItemInData(staredCity);
+        });
+      }
+    });
+  },
+  computed: {
+    filteredLocation: function() {
+      let self = this;
+      return this.data.filter(item => {
+        return item.County.match(self.filter);
+      })
+    }
+  },
+  methods: {
+    moveToStared: function(city) {
+      //stared加入，data移除
+      this.stared.push(city);
+      this.removeOneItemInData(city);
+
+      this.updateStaredToLocalStorage();
+
+      //stared依據SiteId從小到大重新排序
+      this.stared = this.stared.sort(function (a, b){
+        var a = Number(a['SiteId']);
+        var b = Number(b['SiteId']);
+
+        return (a === b ? 0 : a > b ? 1 : -1) * 1;
       });
     },
-  }
+    moveToData: function(city) {
+      //data加入，stared移除
+      this.data.push(city);
+      this.removeOneItemInStared(city);
+
+      this.updateStaredToLocalStorage();
+
+      //data依據SiteId從小到大重新排序
+      this.data = this.data.sort(function (a, b){
+        var a = Number(a['SiteId']);
+        var b = Number(b['SiteId']);
+
+        return (a === b ? 0 : a > b ? 1 : -1) * 1;
+      });
+    },
+    updateStaredToLocalStorage() {
+      let staredSiteId = [];
+      this.stared.forEach(item => {
+        staredSiteId.push(item.SiteId);
+      });
+      localStorage.setItem('staredCity', staredSiteId);
+    },
+    removeOneItemInData(item) {
+      let index = this.data.indexOf(item);
+      this.data.splice(index, 1);
+    },
+    removeOneItemInStared(item) {
+      let index = this.stared.indexOf(item);
+      this.stared.splice(index, 1);
+    }
+  },
 });
 </script>
 <!-- 
