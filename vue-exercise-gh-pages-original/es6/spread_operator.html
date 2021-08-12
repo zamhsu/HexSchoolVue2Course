@@ -105,38 +105,71 @@
 
 <script>
 // #1 使用展開語法，合併以下陣列
-let groupA = ['小明', '杰倫', '阿姨'];
-let groupB = ['老媽', '老爸'];
+// let groupA = ['小明', '杰倫', '阿姨'];
+// let groupB = ['老媽', '老爸'];
+// let groupAllTraditional = groupA.concat(groupB);
+// let groupAllSpread = [...groupA, ...groupB];
+// console.log('concat', groupAllTraditional);
+// console.log('spread', groupAllSpread);
 
 // #2 淺複製觀念說明 (shallow copy)
+// 傳參考的值在修改時會同時變動
 // let groupA = ['小明', '杰倫', '阿姨'];
 // let groupB = groupA;
 // groupB.push('阿明');
 // console.log(groupA); // 請問此時的 groupA 值為何
+// ['小明', '杰倫', '阿姨', '阿明']
+
+// 解法：
+// let groupA = ['小明', '杰倫', '阿姨'];
+// let groupB = [...groupA]; // 新陣列
+// groupB.push('阿明');
+// console.log(groupA); // 請問此時的 groupA 值為何
+// ['小明', '杰倫', '阿姨']
 
 
 // #3 類陣列觀念說明
 // let doms = document.querySelectorAll('li');
+// let spreadDoms = [...doms]; // 將類陣列轉為陣列
 // console.log(doms);
+// console.log(spreadDoms);
+// 可展開[[Prototype]]查看可用的方法，類陣列會少很多方法
 
 // #4 類陣列觀念說明
 // var originCash = 1000;
 // function updateEasyCard() {
-//   let arg = arguments
-//   // let sum = arg.reduce(function (accumulator, currentValue) {
-//   //   return accumulator + currentValue;
-//   // }, 0);
-//   // console.log('我有 ' + sum + ' 元');
+//   // 方法的參數如果沒有實際指定的話，都會進到arguments裡
+//   // arguments 是類陣列
+//   //let arg = arguments;
+//   let arg = [...arguments]; // 將類陣列轉為陣列
+//   console.log(arg);
+//   let sum = arg.reduce(function (accumulator, currentValue) {
+//     return accumulator + currentValue;
+//   }, 0);
+//   console.log('我有 ' + sum + ' 元');
 // }
 // updateEasyCard(0); // 我有 1000 元
 // updateEasyCard(10, 50, 100, 50, 5, 1, 1, 1, 500); // 我有 718 元
 
 
 // #5 其餘參數
-// function moreMoney(...money) {
+// 原本
+// function moreMoney(a, b, c) {
 //   // console.log(money);
 // }
-// moreMoney(100, 100, 100)
+// moreMoney(100, 200, 300);
+
+// 使用spread
+// function moreMoney(...money) {
+//   console.log(money);
+// }
+// moreMoney(100, 200, 300);
+
+// 使用spread + 其他參數
+// function moreMoney(ming, ...money) {
+//   console.log(ming, money);
+// }
+// moreMoney('小明', 100, 200, 300, 400, 500);
 </script> 
         </div>
       </div>
