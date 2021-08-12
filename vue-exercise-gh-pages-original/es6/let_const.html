@@ -106,44 +106,89 @@
 <script>
 // #1
 // 修改 var -> let
-var mom = '老媽';
-(function () {
-  console.log(mom);
-})();
+// var
+// console.log(mom);
+// var mom = '老媽';
+// (function () {
+//   console.log(mom);
+// })();
+
+// let
+// console.log(mom);
+// let mom = '老媽';
+// (function () {
+//   console.log(mom);
+// })();
+
+// undefined 記憶體已經有準備位置
+// not defined 記憶體沒有準備位置
+
+// var 的作用域在function scope
+// let 的作用域在block
 
 // #2
 // 修改 var -> let
+// var
 // function varMing () {
 //   var ming = '小明';
 //   if (true) {
-//     var ming = '杰哥';  
+//     var ming = '杰哥';
+//     console.log('if裡面', ming);
 //     // 這裡的 ming 依然是外層的小明，所以小明即將被取代
 //   }
-//   console.log(ming);  // '杰哥'
+//   console.log('外面', ming);  // '杰哥'
+// }
+
+// let
+// function varMing () {
+//   var ming = '小明';
+//   if (true) {
+//     let ming = '杰哥';
+//     console.log('if裡面', ming);
+//     // 這裡的 ming 是if裡面的杰哥
+//   }
+//   console.log('外面', ming);  // '小明'
 // }
 
 
 // #3
 // 修改 var -> let
-// for (var i = 0; i < 10; i++) {
+// var, function scope
+// for (var i = 0; i < 10; i++) {  // var i = 全域變數
 //   console.log(i);
 //   setTimeout(function () {
 //     console.log('這執行第' + i + '次');
 //   }, 10);
 // }
+// 可在console輸入 window.i 查看 => 10
+
+// let, block
+// for (let i = 0; i < 10; i++) {  // let i = 區域變數
+//   console.log(i);
+//   setTimeout(function () {
+//     console.log('這執行第' + i + '次');
+//   }, 10);
+// }
+// 可在console輸入 window.i 查看 => undefined
 
 // #4
 // const
+// 宣告後不可再被修改
 // const ming = '鐵錚錚男子漢';
+// ming = '不是男子漢';
 
 // #5
 // const 與 物件
+// 是物件時，可以修改裡面的值
+// 原因：物件本身是傳參考，只要不把參考替換掉的話，都可以被修改
 // const family = {
 //   mom: '老媽',
 //   me: '小明',
 //   sister: '小橙'
 // };
 // family.father = '爸爸';
+// console.log(family);
+// family = {};  //錯誤
 
 // #6
 // 額外問題，不使用 let，上述答案如何解答
@@ -153,6 +198,26 @@ var mom = '老媽';
 //     console.log('這執行第' + i + '次');
 //   }, 10);
 // }
+
+// 解法1，使用const
+// for (var i = 0; i < 10; i++) {
+//   console.log(i);
+//   const k = i
+//   setTimeout(function () {
+//     console.log('這執行第' + k + '次');
+//   }, 10);
+// }
+
+// 解法2，使用立即函式(IIFE)
+// for (var i = 0; i < 10; i++) {
+//   console.log(i);
+//   (function (i) {
+//     setTimeout(function () {
+//       console.log('這執行第' + i + '次');
+//     }, 10);
+//   })(i);
+// }
+
 </script> 
         </div>
       </div>
