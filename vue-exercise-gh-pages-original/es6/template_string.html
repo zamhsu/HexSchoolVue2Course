@@ -102,6 +102,9 @@
   </ol>
 </div>
 
+<div id="app">
+
+</div>
 
 <script>
 // #1 樣板字串
@@ -128,6 +131,23 @@ let originUl = '<ul>\
 </ul>';
 
 console.log(originString, originUl);
+
+let newString = `我叫做 people[0].name`;
+let newUl = `
+<ul>
+  <li>我叫做 ${people[0].name}</li>
+  <li>我叫做 ${people[1].name}</li>
+  <li>我叫做 ${people[2].name}</li>
+</ul>
+`;
+let newUl2 = `
+<ul>
+  ${people.map( person => `<li>我叫做 ${person.name}</li>` ).join('')}
+</ul>
+`;
+console.log(newString, newUl, newUl2);
+
+$('#app').html(newUl2);
 
 </script> 
         </div>
