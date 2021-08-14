@@ -104,8 +104,6 @@
 
 
 <script>
-// #1 樣板字串
-// 將以下改寫成 Template String 寫法
 const people = [
   {
     name: '小明',
@@ -127,25 +125,126 @@ const people = [
 
 // forEach 與 map
 // 將所有物件增加 icash 有多少金額的欄位
+// 迴圈寫法
+for (let i = 0; i < people.length; i++) {
+  people[i].icash = people[i].money + 500;
+  console.log('for loop', people[i]);
+}
 
+// forEach 寫法
+// 單純迴圈，不會return
+// value=目前物件
+// index=目前索引值
+// array=陣列本身，通常不會使用
+people.forEach(function(value, index, array) {
+  value.icash = value.money + 500;
+  console.log('forEach', value, index, array);
+})
+
+// map 寫法
+// 迴圈，會return並產生新陣列
+// 如果不寫return，會回傳undefined
+// 需要新的變數接取
+// 不適合設定條件過濾資料，不合條件的會回傳undefined
+// value=目前物件
+// index=目前索引值
+// array=陣列本身，通常不會使用
+const demoMap = people.map(function (value, index, array) {
+  // 不適合條件過濾
+  // if (value.money > 2000) {
+  //   return {
+  //     ...value,
+  //     icash: value.money + 500
+  //   };
+  // }
+  return {
+      ...value,
+      icash: value.money + 500
+    };
+});
+console.log('map', demoMap);
 
 // filter
 // 挑出金額少於 5000 的物件
+// 迴圈，會return並產生新陣列
+// return true 時將值加入新陣列，false則不加入
+// 需要新的變數接取
+// 適合設定條件過濾資料
+// value=目前物件
+// index=目前索引值
+// array=陣列本身，通常不會使用
+const filterDemo = people.filter(function(value, index, array){
+  return value.money > 5000;
+});
+console.log('filter', filterDemo);
 
 // find
 // 1. 找到金額 = 500 的物件
 // 2. 找到 > 5000 的物件
+// 迴圈，會return並且找到值後就立即回傳，不會再繼續執行(只回傳單一值)
+// return true 時將回傳值，false則回傳undefined
+// 需要新的變數接取
+// 適合設定搜尋指定資料(搜尋id)
+// value=目前物件
+// index=目前索引值
+const findDemo = people.find(function(value, index){
+  return value.money == 500;
+  //return value.money > 5000; //搜尋到有符合的立即回傳，不再執行
+});
+console.log('find', findDemo);
 
 // every
 // 1. 所有物件是否都超過 10000 元
 // 2. 是否所有物件超過 300 元
+// 迴圈，會return true 或 false
+// 陣列裡所有值都符合條件時才會return true
+// 需要新的變數接取
+// value=目前物件
+// index=目前索引值
+const everyDemo = people.every(function(value, index){
+  //return value.money > 10000; // false
+  return value.money > 300; // true
+});
+console.log('every', everyDemo);
 
 // some
 // 1. 是否有物件超過 10000 元
 // 2. 是否有物件持有金額少於 300元
+// 迴圈，會return true 或 false
+// 陣列裡有值都符合條件時就會return true
+// 需要新的變數接取
+// value=目前物件
+// index=目前索引值
+const someDemo = people.some(function(value, index){
+  //return value.money < 300; // false
+  return value.money > 10000; // true
+});
+console.log('some', someDemo);
 
 // reduce
 // 去除掉老媽，請問剩下的人有多少錢？
+// 迴圈，會return 最後的結果(單一值)
+// 可作為加總或比大小後取值
+// 需要新的變數接取
+// previousValue=前一個參數(目前值的前一個值)，沒有則在function後面加逗號後自行輸入預設值
+// currentValue=目前物件
+// currentIndex=目前索引值
+people.pop(people.find(q => q.name == '老媽')); // 先移除無限值
+
+// 加總
+const reduceDemo1 = people.reduce(function(previousValue, currentValue, currentIndex){
+  console.log('reduceDemo1.previousValue', previousValue); // 0(外面的預設值) 500 3500
+  return previousValue + currentValue.money;
+}, 0); // 逗號後面為沒有previousValue時自定義的預設值
+console.log('reduceDemo1', reduceDemo1);
+
+// 比大小後取值
+// 類似C# LINQ的Max()
+const reduceDemo2 = people.reduce(function(previousValue, currentValue, currentIndex){
+  console.log('reduceDemo2.previousValue', previousValue); // 0(外面的預設值) 500 3500
+  return Math.max(previousValue, currentValue.money); // 比較前後值，回傳大的值
+}, 0); // 逗號後面為沒有previousValue時自定義的預設值
+console.log('reduceDemo2', reduceDemo2);
 
 </script> 
         </div>
