@@ -106,33 +106,76 @@
 <script>
 // #1 改寫傳統函式
 // 將以下改寫成 Arrow Function，並嘗試縮寫形式
-var callSomeone = function (someone) {
-  return someone + '吃飯了'
-}
-console.log(callSomeone('小明'))
+// var callSomeone = function (someone) {
+//   return someone + '吃飯了';
+// }
+// console.log('一般函式', callSomeone('小明'));
+
+// 寫法1
+// var callSomeone = (someone) => {
+//   return someone + '吃飯了'
+// }
+// console.log('寫法1', callSomeone('小明'));
+
+// 寫法2.1(帶參數)
+// 程式碼只有1行時使用，會自動return
+// var callSomeone = (someone) => someone + '吃飯了';
+// console.log('寫法2.1', callSomeone('小明'));
+
+// 寫法2.2(帶參數)：
+// 程式碼只有1行時使用，會自動return
+// var callSomeone = someone => someone + '吃飯了';
+// console.log('寫法2.2', callSomeone('小明'));
+
+// 寫法2.3(不帶參數)：
+// 程式碼只有1行時使用，會自動return
+// var callSomeone = () => '小明' + '吃飯了';
+// console.log('寫法2.3', callSomeone());
 
 // # 沒有 arguments 參數
 // 將以下改寫成 Arrow Function，並觀察差異
-// const updateEasyCard = function () {
+// const updateEasyCard = () => {
 //   let cash = 0;
 //   console.log(arguments); // arguments is not defined
 // }
 // updateEasyCard(10, 50, 100, 50, 5, 1, 1, 1, 500);
 
+// 解法，使用展開運算子
+// const updateEasyCard = (...arg) => {
+//   let cash = 0;
+//   console.log(arg);
+// }
+// updateEasyCard(10, 50, 100, 50, 5, 1, 1, 1, 500);
+
 
 // # This 綁定的差異
+// 不是所有情境都適用arrow function
 // var name = '全域阿婆'
 // var auntie = {
 //   name: '漂亮阿姨',
 //   callName: function () { 
-//     console.log('1', this.name); // 1 漂亮阿姨
-//     setTimeout(function () {
+//     console.log('1', this.name, this); // 1 漂亮阿姨
+//     setTimeout(function () { // 實質是window.setTimeout
 //       console.log('2', this.name); // 2 漂亮阿姨
 //       console.log('3', this); // 3 auntie 這個物件
 //     }, 10);
 //   },
 // }
 // auntie.callName();
+// 一般function的this = 函式的呼叫方法
+
+// var auntie = {
+//   name: '漂亮阿姨',
+//   callName2: () => { 
+//     console.log('1 arrow', this.name, this); // 1 全域阿婆
+//     setTimeout(() => { // 實質是window.setTimeout
+//       console.log('2 arrow', this.name); // 2 全域阿婆
+//       console.log('3 arrow', this); // 3 全域(window)
+//     }, 10);
+//   },
+// }
+// auntie.callName2();
+// arrow function的this = 可能會是全域(window)，也有可能是其他物件上
 
 // # 善用的方式
 // 請將內層的 console.log 能夠指向 auntie 這個物件
@@ -140,11 +183,22 @@ console.log(callSomeone('小明'))
 //   name: '漂亮阿姨',
 //   callName () { 
 //     setTimeout(function () {
-//       console.log(this);
+//       console.log(this);  // this 指向window
 //     }, 10);
 //   }
 // }
 // auntie.callName();
+
+// var auntie2 = {
+//   name: '漂亮阿姨',
+//   callName () { 
+//     var vm = this;
+//     setTimeout(() => {
+//       console.log(vm, vm.name);  // this 指向auntie2
+//     }, 10);
+//   }
+// }
+// auntie2.callName();
 </script> 
         </div>
       </div>
