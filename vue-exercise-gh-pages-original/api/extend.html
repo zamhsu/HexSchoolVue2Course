@@ -127,10 +127,7 @@
 
 <script>
 // extend 是基礎建構的概念
-// var newExtend = Vue.extend()
-
-var childOne = {
-  props: ['item'],
+var newExtend = Vue.extend({
   data: function() {
     return {
       data: {},
@@ -151,29 +148,28 @@ var childOne = {
   mounted: function() {
     console.log('Extend:', this)
   }
+})
+
+var childOne = {
+  props: ['item'],
+  extends: newExtend,
 }
 
 var childTwo = {
   props: ['item'],
   data: function() {
     return {
-      data: {},
-      extendData: '這段文字是 extend 得到'
+      // 會額外建立
+      childTwo: '元件 2',
+      // 會覆寫extend裡的內容
+      extendData: '這段文字是 childTwo 得到'
     }
   },
   template: '#row-component-two',
-  filters: {
-    dollarSign: function (n) {
-      return `$ ${n}`
-    },
-    currency: function(n) {
-      return n.toFixed(2).replace(/./g, function(c, i, a) {
-          return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-      });
-    }
-  },
+  extends: newExtend,
   mounted: function() {
-    console.log('Extend:', this)
+    // 會額外執行
+    console.log('childTwo');
   }
 }
 
