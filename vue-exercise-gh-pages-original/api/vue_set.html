@@ -127,9 +127,20 @@ var child = {
   },
   methods: {
     addData: function() {
-      this.data.item = {
+      // 無法綁定到data裡（沒有get和set），因為data裡沒有item
+      // this.data.item = {
+      //   name: this.item.name
+      // }
+      // console.log(this.data, this);
+
+      // 使用Vue.$set可綁定到Vue裡
+      // this.$set(target, key, value)
+      // target: 要加入的目標位置
+      // key: 鍵值/欄位名稱
+      // value: 資料的值
+      this.$set(this.data, "item", {
         name: this.item.name
-      }
+      });
       console.log(this.data, this);
 
       // this.$set(this.data, 'item', {
