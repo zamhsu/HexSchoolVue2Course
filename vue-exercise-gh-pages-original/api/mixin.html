@@ -101,6 +101,8 @@
     <tbody>
       <tr is="row-component" v-for="(item, key) in data" 
         :item="item" :key="key"></tr>
+        <tr is="row-component-two" v-for="(item, key) in data" 
+        :item="item"></tr>
     </tbody>
   </table>
 </div>
@@ -116,13 +118,7 @@
 <script>
 // mixin 是多個混合的概念
 
-Vue.component('row-component', {
-  props: ['item'],
-  data: function() {
-    return {
-      data: {},
-    }
-  },
+var mixinFilter = {
   template: '#row-component',
   filters: {
     dollarSign: function (n) {
@@ -133,11 +129,62 @@ Vue.component('row-component', {
           return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
       });
     }
-  },
+  }
+};
+
+var mixinMiunted = {
   mounted () {
     console.log('這段是 Mixin 產生')
   }
+};
+
+// 使用mixins
+Vue.component('row-component', {
+  props: ['item'],
+  data: function() {
+    return {
+      data: {},
+    }
+  },
+  mixins: [mixinFilter, mixinMiunted]
 });
+
+// 另一元件使用相同行為
+Vue.component('row-component-two', {
+  props: ['item'],
+  data: function() {
+    return {
+      data: {
+        data: 'Two'
+      },
+    }
+  },
+  mixins: [mixinFilter, mixinMiunted]
+});
+
+// 原始
+// Vue.component('row-component', {
+//   props: ['item'],
+//   data: function() {
+//     return {
+//       data: {},
+//     }
+//   },
+//   template: '#row-component',
+//   filters: {
+//     dollarSign: function (n) {
+//       return `$ ${n}`
+//     },
+//     currency: function(n) {
+//       return n.toFixed(2).replace(/./g, function(c, i, a) {
+//           return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+//       });
+//     }
+//   },
+//   mounted () {
+//     console.log('這段是 Mixin 產生')
+//   }
+// });
 
 
 var app = new Vue({
