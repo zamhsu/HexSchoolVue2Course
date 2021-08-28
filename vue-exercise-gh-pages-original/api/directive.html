@@ -97,52 +97,46 @@
 </div>
 
 <div id="app">
-  <input type="email" v-model="email" v-focus v-validator="{ className: 'form-control' }">
+  <input type="email" v-model="email" v-focus v-emailformat>
 </div>
 
 <script>
 // 官方文件 https://cn.vuejs.org/v2/guide/custom-directive.html
+// auto focus
 Vue.directive('focus', {
-  inserted: function(el) {
-    el.focus()
+  inserted: function (el) {
+    el.focus();
   }
-})
+});
 
-Vue.directive('validator', {
-  update: function(el, binding, vnode) {
-    console.log('update', el.value, el.className, vnode);
+// validate email format
+Vue.directive('emailformat', {
+  update: function(el, binding, vnode){
+    // 所屬元素的vnode更新時要做的事
 
-    // 尋找當前的 model 名稱
-    var currentModel = vnode.data.directives.find(function(o) {
-        return o.name === 'model';
-    }).expression;
-    
-    // 從當前 Model 取值
-    var value = vnode.context[currentModel];
+    console.log('update', el, binding, vnode);
+    // 每次更新時查看輸入的value
+    var value = el.value;
+    console.log(value);
 
-    // Email validate
-    var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!re.test(value)) {
-      el.className = 'form-control is-invalid'
-    } else {
-      el.className = 'form-control is-valid'
+    // 使用regex檢查是否符合email格式
+    var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    console.log(value, emailRegex.test(value));
+
+    // 更換錯誤時的樣式
+    if (!emailRegex.test(value)) {
+      el.className = 'form-control is-invalid';
+    }
+    else {
+      el.className = 'form-control is-valid';
     }
   },
-  bind: function(el, binding, vnode) {
+  bind: function(el, binding, vnode){
+    // 首次綁定時要做的事
+
     console.log('bind', el, binding, vnode);
-    el.className = binding.value.className
-
-    var currentModel = vnode.data.directives.find(function(o) {
-        return o.name === 'model';
-    }).expression;
-    var value = vnode.context[currentModel];
-
-    var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!re.test(value)) {
-      el.className = 'form-control is-invalid'
-    } else {
-      el.className = 'form-control is-valid'
-    }
+    // 將此元素的class改為form-control
+    el.className = 'form-control';
   }
 });
 
