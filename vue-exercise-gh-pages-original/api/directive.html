@@ -97,7 +97,7 @@
 </div>
 
 <div id="app">
-  <input type="email" v-model="email" v-focus v-emailformat>
+  <input type="email" v-model="email" v-focus v-emailformat="{ className: 'form-control' }">
 </div>
 
 <script>
@@ -136,7 +136,23 @@ Vue.directive('emailformat', {
 
     console.log('bind', el, binding, vnode);
     // 將此元素的class改為form-control
-    el.className = 'form-control';
+    //el.className = 'form-control';
+    // 接收參數的寫法
+    // 外部傳入的參數會在binding參數的value裡
+    el.className = binding.value.className;
+
+
+    // 在不確定v-model和所在值的時候：
+    // 取得v-model的屬性名稱（會在vnode.data.directives裡）
+    // 依照console.log節點內的值來尋找
+    var vModel = vnode.data.directives.find(item => {
+      return item.name === 'model'
+    }).expression;
+    console.log('binding.vnode.data.directive (v-model)', vModel);
+
+    // 取得v-model裡的值
+    var value = vnode.context[vModel];
+    console.log('binding.context[vModel] (v-model value)', value);
   }
 });
 
