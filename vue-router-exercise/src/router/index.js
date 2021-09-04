@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 // 官方的元件
 
 import Home from '@/components/HelloWorld';
+import Page from '@/components/pages/page';
 // 自訂的分頁元件
 
 Vue.use(VueRouter);
@@ -14,6 +15,11 @@ export default new VueRouter({
             name: '首頁', // 元件呈現的名稱
             path: '/index', // 虛擬路徑
             component: Home // 對應的元件
-        }
+        },
+        {
+            name: '分頁', // 元件呈現的名稱
+            path: '/page', // 虛擬路徑
+            component: Page // 對應的元件
+        },
     ]
 });
