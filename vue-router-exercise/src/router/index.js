@@ -20,7 +20,7 @@ export default new VueRouter({
             component: Home // 對應的元件
         },
         {
-            name: '分頁', // 元件呈現的名稱
+            name: '', // 元件呈現的名稱，會進入children裡的路徑，所以這裡的name會直接被替換掉，會出錯誤提示，name改空字串即可
             path: '/page', // 虛擬路徑
             component: Page, // 對應的元件
             children: [ //巢狀分頁
