@@ -19,6 +19,8 @@
 
     <img alt="Vue logo" src="./assets/logo.png">
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+    <!-- ↓這個只有有設定component menu有對應的元件時才會使用 -->
+    <router-view name="menu"></router-view>
     <router-view></router-view>
   </div>
 </template>

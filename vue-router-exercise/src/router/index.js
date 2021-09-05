@@ -7,6 +7,7 @@ import Page from '@/components/pages/page';
 import child from '@/components/pages/child';
 import child2 from '@/components/pages/child2';
 import child3 from '@/components/pages/child3';
+import Menu from '@/components/pages/menu';
 // 自訂的分頁元件
 
 Vue.use(VueRouter);
@@ -17,12 +18,16 @@ export default new VueRouter({
         {
             name: '首頁', // 元件呈現的名稱
             path: '/index', // 虛擬路徑
-            component: Home // 對應的元件
+            component: Home // 對應的元件(App.vue router-view沒有設定name的那個)，相當於default: Home
         },
         {
             name: '', // 元件呈現的名稱，會進入children裡的路徑，所以這裡的name會直接被替換掉，會出錯誤提示，name改空字串即可
             path: '/page', // 虛擬路徑
-            component: Page, // 對應的元件
+            //component: Page, // 對應的元件
+            components: {
+                default: Page, // 預設對應的元件(App.vue router-view沒有設定name的那個)
+                menu: Menu, // router-view指定name為menu時會使用Menu元件
+            },
             children: [ //巢狀分頁
                 {
                     name: '卡片 1', // 元件呈現的名稱
