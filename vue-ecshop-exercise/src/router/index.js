@@ -12,14 +12,19 @@ Vue.use(VueRouter);
 export default new VueRouter({
     routes: [
         {
+            path: '*', // 非路由設定的頁面
+            redirect: '/login' // 重新導向
+        },
+        {
             path: '/', // 路徑儘量小寫
             name: 'HelloWorld',
-            component: HelloWorld
+            component: HelloWorld,
+            meta: { requiredAuth: true }
         },
         {
             path: '/login', // 路徑儘量小寫
             name: 'Login',
-            component: Login
+            component: Login,
         },
     ]
 });

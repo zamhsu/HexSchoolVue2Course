@@ -55,7 +55,7 @@ export default {
             // 自行設定cookie
             let token = response.data.token;
             let expired = response.data.expired;
-            setToken(token, expired);
+            this.setToken(token, expired);
             self.$router.push("/");
         }
       });
