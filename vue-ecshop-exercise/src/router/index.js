@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
-import HelloWorld from '@/components/HelloWorld';
+//import HelloWorld from '@/components/HelloWorld';
 import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
@@ -12,14 +12,14 @@ export const router = createRouter({
             path: '/:pathMatch(.*)*', // 非路由設定的頁面
             redirect: '/login' // 重新導向
         },
+        // {
+        //     path: '/', // 路徑儘量小寫
+        //     name: 'HelloWorld',
+        //     component: HelloWorld,
+        //     meta: { requiredAuth: true }
+        // },
         {
-            path: '/', // 路徑儘量小寫
-            name: 'HelloWorld',
-            component: HelloWorld,
-            meta: { requiredAuth: true }
-        },
-        {
-            path: '/login',
+            path: '/login', // 路徑儘量小寫
             name: 'Login',
             component: Login
         },

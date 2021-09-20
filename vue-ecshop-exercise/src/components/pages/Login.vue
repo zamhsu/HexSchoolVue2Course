@@ -56,7 +56,7 @@ export default {
           let token = response.data.token;
           let expired = response.data.expired;
           this.setToken(token, expired);
-          self.$router.push("/");
+          self.$router.push("/admin/products");
         }
       });
     },
