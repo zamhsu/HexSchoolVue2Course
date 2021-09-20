@@ -168,6 +168,8 @@
 
 <script>
 import $ from "jquery";
+import adminApiUrl from "../../apis/hexSchoolAdmin";
+import userApiUrl from "../../apis/hexSchoolUser";
 
 export default {
   data() {
@@ -183,7 +185,7 @@ export default {
   methods: {
     getProducts() {
       let self = this;
-      const api = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/products`;
+      const api = userApiUrl.getProductsUrl();
       this.$http.get(api).then((response) => {
         console.log(response.data);
         self.products = response.data.products;
@@ -195,12 +197,12 @@ export default {
 
       // create product
       let httpMethod = 'post';
-      let api = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/admin/product`;
+      let api = adminApiUrl.createProductUrl();
       
       if (!this.isNew) {
         // update product
         httpMethod = 'put';
-        api = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/admin/product/${this.tempProduct.id}`;
+        api = adminApiUrl.updateProductUrl(this.tempProduct.id);
       }
       
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
@@ -220,7 +222,7 @@ export default {
 
       // delete product
       let httpMethod = 'delete';
-      let api = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/admin/product/${this.tempProduct.id}`;
+      let api = adminApiUrl.deleteProductUrl(this.tempProduct.id);
       
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
         console.log(response.data);

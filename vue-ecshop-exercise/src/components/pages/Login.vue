@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import adminApiUrl from "../../apis/hexSchoolAdmin";
+
 export default {
   name: "Login",
   data() {
@@ -48,7 +50,7 @@ export default {
   methods: {
     signin() {
       let self = this;
-      const api = `${process.env.VUE_APP_API_PATH}/admin/signin`;
+      const api = adminApiUrl.loginUrl();
       this.$http.post(api, this.user).then((response) => {
         console.log(response.data);
         if (response.data.success) {

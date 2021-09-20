@@ -5,12 +5,14 @@
 </template>
 
 <script>
+import adminApiUrl from "../apis/hexSchoolAdmin";
+
 export default {
   name: "HelloWorld",
   methods: {
     signout() {
       let self = this;
-      const api = `${process.env.VUE_APP_API_PATH}/logout`;
+      const api = adminApiUrl.logoutUrl();
       this.$http.post(api).then((response) => {
         if (response.data.success) {
           self.$router.push("/login");
