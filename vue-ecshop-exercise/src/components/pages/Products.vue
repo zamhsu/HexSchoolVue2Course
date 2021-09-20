@@ -11,7 +11,7 @@
           <th class="w-120px">原價</th>
           <th class="w-120px">售價</th>
           <th class="w-100px">是否啟用</th>
-          <th class="w-80px">編輯</th>
+          <th class="w-130px">編輯</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +25,10 @@
             <span v-else class="text-danger">停用</span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm" @click="openProductModal(false, item)">編輯</button>
+            <div class="btn-group">
+              <button class="btn btn-outline-primary btn-sm mr-2" @click="openProductModal(false, item)">編輯</button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDeleteModal(item)">刪除</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -137,7 +140,7 @@
     </div>
 
     <!-- delProductModal -->
-    <!-- <div class="modal fade" id="delProductModal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="delProductModal" tabindex="-1" role="dialog"
       aria-labelledby="delProductModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content border-0">
@@ -154,12 +157,11 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-danger"
-              >確認刪除</button>
+            <button type="button" class="btn btn-danger" @click="deleteProduct()">確認刪除</button>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
   </div>
 </template>
@@ -209,6 +211,26 @@ export default {
         } else {
           $("#productModal").modal("hide");
           self.getProducts();
+          console.log("編輯失敗");
+        }
+      });
+    },
+    deleteProduct() {
+      let self = this;
+
+      // delete product
+      let httpMethod = 'delete';
+      let api = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/admin/product/${this.tempProduct.id}`;
+      
+      this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
+          $("#delProductModal").modal("hide");
+          self.getProducts();
+        } else {
+          $("#delProductModal").modal("hide");
+          self.getProducts();
+          console.log("刪除失敗");
         }
       });
     },
@@ -222,12 +244,20 @@ export default {
       }
 
       $("#productModal").modal("show");
+    },
+    openDeleteModal(product) {
+      this.tempProduct = product;
+
+      $("#delProductModal").modal("show");
     }
   },
 };
 </script>
 
 <style scoped>
+.w-130px {
+  width: 130px;
+}
 .w-120px {
   width: 120px;
 }
