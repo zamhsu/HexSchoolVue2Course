@@ -8,12 +8,15 @@ import 'bootstrap';
 
 import App from './App.vue';
 import { router } from './router';
+import eventBus from './eventBus';
 
-createApp(App)
-    .use(router)
-    .use(VueAxios, axios)
-    .component('Loading', Loading)
-    .mount('#app');
+const app = createApp(App);
+app.use(router);
+app.use(VueAxios, axios);
+app.component('Loading', Loading);
+// 自定義全域變數
+app.config.globalProperties.eventBus = eventBus;
+app.mount('#app');
 
 // 導航守衛 Navigation Guards
 router.beforeEach((to, from, next) => {

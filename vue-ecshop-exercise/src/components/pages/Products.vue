@@ -205,12 +205,12 @@ export default {
       let self = this;
 
       // create product
-      let httpMethod = 'post';
+      let httpMethod = "post";
       let api = adminApiUrl.createProductUrl();
       
       if (!this.isNew) {
         // update product
-        httpMethod = 'put';
+        httpMethod = "put";
         api = adminApiUrl.updateProductUrl(this.tempProduct.id);
       }
       
@@ -222,6 +222,7 @@ export default {
         } else {
           $("#productModal").modal("hide");
           self.getProducts();
+          this.eventBus.emit("message.push", `編輯失敗;danger`);
           console.log("編輯失敗");
         }
       });
@@ -230,7 +231,7 @@ export default {
       let self = this;
 
       // delete product
-      let httpMethod = 'delete';
+      let httpMethod = "delete";
       let api = adminApiUrl.deleteProductUrl(this.tempProduct.id);
       
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
@@ -241,6 +242,7 @@ export default {
         } else {
           $("#delProductModal").modal("hide");
           self.getProducts();
+          this.eventBus.emit("message.push", `刪除失敗;danger`);
           console.log("刪除失敗");
         }
       });
@@ -254,15 +256,16 @@ export default {
       const file = this.$refs.files.files[0];
       const formData = new FormData();
       // 將欄位加入formData
-      formData.append('file-to-upload', file);
+      formData.append("file-to-upload", file);
       const api = adminApiUrl.uploadImage();
 
       this.$http.post(api, formData, {
         // 修改資料類型
         Headers: {
-          'Content-type': 'multipart/form-data'
+          "Content-type": "multipart/form-data"
         }
       }).then((response) => {
+        self.status.fileUploading = false;
         console.log(response.data);
         if (response.data.success) {
           // 將結果強制寫入Vue中，否則不會綁定
@@ -270,8 +273,8 @@ export default {
           // $set(要寫入的物件, 欄位名稱, 要寫入的資料)
           // self.$set(self.tempProduct, 'imageUrl', response.data.imageUrl);
           self.tempProduct.imageUrl = response.data.imageUrl;
-
-          self.status.fileUploading = false;
+        } else {
+          this.eventBus.emit("message.push", `${response.data.message};danger`);
         }
       });
     },

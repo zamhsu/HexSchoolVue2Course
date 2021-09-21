@@ -1,6 +1,7 @@
 <template>
   <div>
     <Navbar/>
+    <AlertMessage/>
     <div class="container-fluid">
       <div class="row">
         <Sidebar/>
@@ -15,11 +16,13 @@
 <script>
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import AlertMessage from './AlertMessage';
 
 export default({
     components:{
         Sidebar,
-        Navbar
+        Navbar,
+        AlertMessage
     },
     created() {
       // 取得JWT Token 並放到header的Authorization中
