@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading v-model:active="isLoading"/>
     <div class="text-right">
       <button class="btn btn-primary mt-4" @click="openProductModal(true)">建立新產品</button>
     </div>
@@ -58,7 +59,7 @@
                 </div>
                 <div class="form-group">
                   <label for="customFile">或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                    <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
                   </label>
                   <input type="file" id="customFile" class="form-control"
                     ref="files" @change="uploadFile()">
@@ -176,7 +177,11 @@ export default {
     return {
       products: [],
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      isLoading: false,
+      status: {
+        fileUploading: false
+      }
     };
   },
   created() {
@@ -184,11 +189,15 @@ export default {
   },
   methods: {
     getProducts() {
+      this.isLoading = true;
+
       let self = this;
       const api = userApiUrl.getProductsUrl();
       this.$http.get(api).then((response) => {
         console.log(response.data);
         self.products = response.data.products;
+
+        self.isLoading = false;
       });
     },
     editProduct() {
@@ -239,6 +248,8 @@ export default {
     uploadFile() {
       console.log(this);
 
+      this.status.fileUploading = true;
+
       let self = this;
       const file = this.$refs.files.files[0];
       const formData = new FormData();
@@ -259,6 +270,8 @@ export default {
           // $set(要寫入的物件, 欄位名稱, 要寫入的資料)
           // self.$set(self.tempProduct, 'imageUrl', response.data.imageUrl);
           self.tempProduct.imageUrl = response.data.imageUrl;
+
+          self.status.fileUploading = false;
         }
       });
     },
