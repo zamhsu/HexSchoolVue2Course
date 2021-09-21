@@ -61,10 +61,10 @@
                     <i class="fas fa-spinner fa-spin"></i>
                   </label>
                   <input type="file" id="customFile" class="form-control"
-                    ref="files">
+                    ref="files" @change="uploadFile()">
                 </div>
                 <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
-                  class="img-fluid" alt="">
+                  class="img-fluid" :src="tempProduct.imageUrl" alt="">
               </div>
               <div class="col-sm-8">
                 <div class="form-group">
@@ -233,6 +233,32 @@ export default {
           $("#delProductModal").modal("hide");
           self.getProducts();
           console.log("刪除失敗");
+        }
+      });
+    },
+    uploadFile() {
+      console.log(this);
+
+      let self = this;
+      const file = this.$refs.files.files[0];
+      const formData = new FormData();
+      // 將欄位加入formData
+      formData.append('file-to-upload', file);
+      const api = adminApiUrl.uploadImage();
+
+      this.$http.post(api, formData, {
+        // 修改資料類型
+        Headers: {
+          'Content-type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        console.log(response.data);
+        if (response.data.success) {
+          // 將結果強制寫入Vue中，否則不會綁定
+          // vue 3已經將$set移除
+          // $set(要寫入的物件, 欄位名稱, 要寫入的資料)
+          // self.$set(self.tempProduct, 'imageUrl', response.data.imageUrl);
+          self.tempProduct.imageUrl = response.data.imageUrl;
         }
       });
     },
