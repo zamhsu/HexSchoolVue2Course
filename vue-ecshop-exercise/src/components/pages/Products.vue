@@ -35,6 +35,8 @@
       </tbody>
     </table>
 
+    <Pagination :pages="pagination" @emitPage="getProducts"></Pagination>
+
     <!-- productModal -->
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
       aria-labelledby="productModalLabel" aria-hidden="true">
@@ -168,6 +170,8 @@
 </template>
 
 <script>
+import Pagination from '../Pagination.vue';
+
 import $ from "jquery";
 import adminApiUrl from "../../apis/hexSchoolAdmin";
 import userApiUrl from "../../apis/hexSchoolUser";
@@ -176,6 +180,7 @@ export default {
   data() {
     return {
       products: [],
+      pagination: {},
       tempProduct: {},
       isNew: false,
       isLoading: false,
@@ -184,18 +189,22 @@ export default {
       }
     };
   },
+  components: {
+    Pagination
+  },
   created() {
     this.getProducts();
   },
   methods: {
-    getProducts() {
+    getProducts(page) {
       this.isLoading = true;
 
       let self = this;
-      const api = userApiUrl.getProductsUrl();
+      const api = userApiUrl.getProductsUrl(page);
       this.$http.get(api).then((response) => {
         console.log(response.data);
         self.products = response.data.products;
+        self.pagination = response.data.pagination;
 
         self.isLoading = false;
       });
