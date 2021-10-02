@@ -27,7 +27,7 @@
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
-          <router-link to="/admin/products" class="nav-link active">
+          <router-link to="/admin/products" active-class="active" class="nav-link">
             <i class="fas fa-gift"></i>
             產品列表
           </router-link>
@@ -67,11 +67,10 @@
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
+          <router-link to="/customer-order" active-class="active" class="nav-link">
             <i class="fas fa-shopping-cart"></i>
             模擬訂單
-          </a>
+          </router-link>
         </li>
       </ul>
     </div>
