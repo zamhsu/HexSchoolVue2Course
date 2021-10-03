@@ -77,7 +77,11 @@
           <tbody>
             <tr v-for="item in cart.carts" :key="item.id">
               <td class="align-middle">
-                <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteCartItem(item.id)">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="deleteCartItem(item.id)"
+                >
                   <i class="far fa-trash-alt"></i>
                 </button>
               </td>
@@ -98,12 +102,32 @@
               <td colspan="3" class="text-right">總計</td>
               <td class="text-right">{{ cart.total }}</td>
             </tr>
-            <tr>
+            <tr v-if="cart.final_total !== cart.total">
               <td colspan="3" class="text-right text-success">折扣價</td>
               <td class="text-right text-success">{{ cart.final_total }}</td>
             </tr>
           </tfoot>
         </table>
+        <div>
+          <div class="input-group mb-3 input-group-sm">
+            <input
+              type="text"
+              class="form-control"
+              v-model="couponCode"
+              placeholder="請輸入優惠碼"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                @click="useCouponCode()"
+              >
+                套用優惠碼
+              </button>
+            </div>
+          </div>
+          <div class="text-danger" v-if="couponCodeResponse">{{ couponCodeResponse }}</div>
+        </div>
       </div>
     </div>
 
@@ -189,6 +213,8 @@ export default {
       products: [],
       product: {},
       cart: {},
+      couponCode: "",
+      couponCodeErrorMessage: {},
       status: {
         loadingItem: "",
         addingToCart: "",
@@ -248,6 +274,24 @@ export default {
         self.status.addingToCart = "";
         this.getCart();
         $("#productModal").modal("hide");
+      });
+    },
+    useCouponCode() {
+      this.isLoading = true;
+
+      let self = this;
+      const api = userApiUrl.useCouponCode();
+      const couponCode = {
+        code: this.couponCode,
+      };
+      this.$http.post(api, { data: couponCode }).then((response) => {
+        console.log(response.data);
+        if (!response.data.success) {
+          this.couponCodeResponse = response.data.message;
+        }
+
+        this.getCart();
+        self.isLoading = false;
       });
     },
     deleteCartItem(id) {
