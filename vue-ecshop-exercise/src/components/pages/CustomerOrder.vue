@@ -1,6 +1,8 @@
 <template>
   <div>
     <loading v-model:active="isLoading" />
+
+    <!-- product list -->
     <div class="row mt-5">
       <div class="col-md-4 mb-4" v-for="item in products" :key="item.id">
         <div class="card border-0 shadow-sm">
@@ -44,75 +46,131 @@
               ></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-              <i class="fas fa-spinner fa-spin"></i>
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm ml-auto"
+              @click="addToCart(item.id)"
+            >
+              <i
+                class="fas fa-spinner fa-spin"
+                v-if="status.addingToCart === item.id"
+              ></i>
               加到購物車
             </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- product modal -->
-      <div
-        class="modal fade"
-        id="productModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                {{ product.title }}
-              </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
+    <hr />
+
+    <!-- cart list -->
+    <div class="my-5 row justify-content-center">
+      <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <th></th>
+            <th>品名</th>
+            <th>數量</th>
+            <th>單價</th>
+          </thead>
+          <tbody>
+            <tr v-for="item in cart.carts" :key="item.id">
+              <td class="align-middle">
+                <button type="button" class="btn btn-outline-danger btn-sm" @click="deleteCartItem(item.id)">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </td>
+              <td class="align-middle">
+                {{ item.product.title }}
+                <div class="text-success" v-if="item.coupon">已套用優惠券</div>
+              </td>
+              <td class="align-middle">
+                {{ item.qty }}/{{ item.product.unit }}
+              </td>
+              <td class="align-middle">
+                {{ item.product.price }}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-right">總計</td>
+              <td class="text-right">{{ cart.total }}</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right text-success">折扣價</td>
+              <td class="text-right text-success">{{ cart.final_total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- product modal -->
+    <div
+      class="modal fade"
+      id="productModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              {{ product.title }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img :src="product.imageUrl" class="img-fluid" alt="" />
+            <blockquote class="blockquote mt-3">
+              <p class="mb-0 allow-break">{{ product.content }}</p>
+              <footer class="blockquote-footer text-right allow-break">
+                {{ product.description }}
+              </footer>
+            </blockquote>
+            <div class="d-flex justify-content-between align-items-baseline">
+              <div class="h4" v-if="!product.price">
+                {{ product.origin_price }} 元
+              </div>
+              <del class="h6" v-if="product.price"
+                >原價 {{ product.origin_price }} 元</del
               >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <img :src="product.imageUrl" class="img-fluid" alt="" />
-              <blockquote class="blockquote mt-3">
-                <p class="mb-0 allow-break">{{ product.content }}</p>
-                <footer class="blockquote-footer text-right allow-break">
-                  {{ product.description }}
-                </footer>
-              </blockquote>
-              <div class="d-flex justify-content-between align-items-baseline">
-                <div class="h4" v-if="!product.price">
-                  {{ product.origin_price }} 元
-                </div>
-                <del class="h6" v-if="product.price"
-                  >原價 {{ product.origin_price }} 元</del
-                >
-                <div class="h4" v-if="product.price">
-                  現在只要 {{ product.price }} 元
-                </div>
+              <div class="h4" v-if="product.price">
+                現在只要 {{ product.price }} 元
               </div>
-              <select name="" class="form-control mt-3" v-model="product.num">
-                <option :value="num" v-for="num in 10" :key="num">
-                  選購 {{ num }} {{ product.unit }}
-                </option>
-              </select>
             </div>
-            <div class="modal-footer">
-              <div class="text-muted text-nowrap mr-3">
-                小計 <strong>{{ product.num * product.price }}</strong> 元
-              </div>
-              <button type="button" class="btn btn-primary">
-                <i
-                  class="fas fa-spinner fa-spin"
-                  v-if="product.id === status.loadingItem"
-                ></i>
-                加到購物車
-              </button>
+            <select name="" class="form-control mt-3" v-model="product.num">
+              <option :value="num" v-for="num in 10" :key="num">
+                選購 {{ num }} {{ product.unit }}
+              </option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <div class="text-muted text-nowrap mr-3">
+              小計 <strong>{{ product.num * product.price }}</strong> 元
             </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="addToCart(product.id, product.num)"
+            >
+              <i
+                class="fas fa-spinner fa-spin"
+                v-if="product.id === status.addingToCart"
+              ></i>
+              加到購物車
+            </button>
           </div>
         </div>
       </div>
@@ -130,8 +188,10 @@ export default {
     return {
       products: [],
       product: {},
+      cart: {},
       status: {
         loadingItem: "",
+        addingToCart: "",
       },
       isLoading: false,
     };
@@ -163,9 +223,48 @@ export default {
         self.status.loadingItem = "";
       });
     },
+    getCart() {
+      this.isLoading = true;
+
+      let self = this;
+      const api = userApiUrl.getCartUrl();
+      this.$http.get(api).then((response) => {
+        // console.log(response.data);
+        this.cart = response.data.data;
+        self.isLoading = false;
+      });
+    },
+    addToCart(id, quantity = 1) {
+      this.status.addingToCart = id;
+
+      let self = this;
+      const api = userApiUrl.addToCartUrl();
+      const cart = {
+        product_id: id,
+        qty: quantity,
+      };
+      this.$http.post(api, { data: cart }).then(() => {
+        // console.log(response.data);
+        self.status.addingToCart = "";
+        this.getCart();
+        $("#productModal").modal("hide");
+      });
+    },
+    deleteCartItem(id) {
+      this.isLoading = true;
+
+      let self = this;
+      const api = userApiUrl.deleteCartItemUrl(id);
+      this.$http.delete(api).then((response) => {
+        console.log(response.data);
+        this.getCart();
+        self.isLoading = false;
+      });
+    },
   },
   created() {
     this.getProducts();
+    this.getCart();
   },
 };
 </script>
