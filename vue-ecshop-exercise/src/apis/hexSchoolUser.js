@@ -16,5 +16,8 @@ export default {
     },
     useCouponCode() {
         return `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/coupon`;
+    },
+    addToOrder() {
+        return `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/order`;
     }
 }

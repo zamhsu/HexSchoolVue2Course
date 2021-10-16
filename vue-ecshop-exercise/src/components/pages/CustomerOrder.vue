@@ -126,7 +126,130 @@
               </button>
             </div>
           </div>
-          <div class="text-danger" v-if="couponCodeResponse">{{ couponCodeResponse }}</div>
+          <div class="text-danger" v-if="couponCodeErrorMessage">
+            {{ couponCodeErrorMessage }}
+          </div>
+        </div>
+        <div class="my-5 row justify-content-center">
+          <Form class="col-md-6" @submit="addToOrder">
+            <div class="form-group">
+              <label for="useremail">Email</label>
+              <!-- <Field type="email" name="email" class="form-control" id="useremail"
+                rules="required|email"
+                v-model="orderForm.user.email" placeholder="請輸入 Email" /> -->
+              <Field
+                type="email"
+                name="email"
+                rules="required|email"
+                v-model="orderForm.user.email"
+                v-slot="{ field, errorMessage, meta }"
+              >
+                <input
+                  v-bind="field"
+                  class="form-control"
+                  id="useremail"
+                  :class="{
+                    'is-invalid': !!errorMessage,
+                    'is-valid': meta.valid,
+                  }"
+                  placeholder="請輸入 Email"
+                />
+              </Field>
+              <span class="text-danger">
+                <ErrorMessage name="email" />
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="username">收件人姓名</label>
+              <Field
+                type="text"
+                name="name"
+                rules="required"
+                v-model="orderForm.user.name"
+                v-slot="{ field, errorMessage, meta }"
+              >
+                <input
+                  v-bind="field"
+                  class="form-control"
+                  id="username"
+                  :class="{
+                    'is-invalid': !!errorMessage,
+                    'is-valid': meta.valid,
+                  }"
+                  placeholder="請輸入姓名"
+                />
+              </Field>
+              <span class="text-danger">
+                <ErrorMessage name="name" />
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="usertel">收件人電話</label>
+              <Field
+                type="tel"
+                name="tel"
+                rules="required"
+                v-model="orderForm.user.tel"
+                v-slot="{ field, errorMessage, meta }"
+              >
+                <input
+                  v-bind="field"
+                  class="form-control"
+                  id="usertel"
+                  :class="{
+                    'is-invalid': !!errorMessage,
+                    'is-valid': meta.valid,
+                  }"
+                  placeholder="請輸入電話"
+                />
+              </Field>
+              <span class="text-danger">
+                <ErrorMessage name="tel" />
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="useraddress">收件人地址</label>
+              <Field
+                type="text"
+                name="address"
+                rules="required"
+                v-model="orderForm.user.address"
+                v-slot="{ field, errorMessage, meta }"
+              >
+                <input
+                  v-bind="field"
+                  class="form-control"
+                  id="useraddress"
+                  :class="{
+                    'is-invalid': !!errorMessage,
+                    'is-valid': meta.valid,
+                  }"
+                  placeholder="請輸入地址"
+                />
+              </Field>
+              <span class="text-danger">
+                <ErrorMessage name="address" />
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="comment">留言</label>
+              <textarea
+                name=""
+                id="comment"
+                class="form-control"
+                cols="30"
+                rows="10"
+                v-model="orderForm.message"
+              ></textarea>
+            </div>
+            <div class="text-right">
+              <button class="btn btn-danger">送出訂單</button>
+            </div>
+          </Form>
         </div>
       </div>
     </div>
@@ -204,8 +327,24 @@
 
 <script>
 import $ from "jquery";
+import { configure } from "vee-validate";
+import { localize } from "@vee-validate/i18n";
 
 import userApiUrl from "../../apis/hexSchoolUser";
+
+// vee-validate 設定欄位名稱
+configure({
+  generateMessage: localize({
+    zh_TW: {
+      names: {
+        email: "Email",
+        name: "收件人姓名",
+        tel: "收件人電話",
+        address: "收件人地址",
+      },
+    },
+  }),
+});
 
 export default {
   data() {
@@ -214,7 +353,16 @@ export default {
       product: {},
       cart: {},
       couponCode: "",
-      couponCodeErrorMessage: {},
+      couponCodeErrorMessage: "",
+      orderForm: {
+        user: {
+          name: "",
+          email: "",
+          tel: "",
+          address: "",
+        },
+        message: "",
+      },
       status: {
         loadingItem: "",
         addingToCart: "",
@@ -285,9 +433,9 @@ export default {
         code: this.couponCode,
       };
       this.$http.post(api, { data: couponCode }).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         if (!response.data.success) {
-          this.couponCodeResponse = response.data.message;
+          this.couponCodeErrorMessage = response.data.message;
         }
 
         this.getCart();
@@ -302,6 +450,18 @@ export default {
       this.$http.delete(api).then((response) => {
         console.log(response.data);
         this.getCart();
+        self.isLoading = false;
+      });
+    },
+    addToOrder(values) {
+      console.log(values);
+      this.isLoading = true;
+
+      let self = this;
+      const api = userApiUrl.addToOrder();
+      this.$http.post(api, { data: self.orderForm }).then((response) => {
+        console.log(response.data);
+        //this.getCart();
         self.isLoading = false;
       });
     },
