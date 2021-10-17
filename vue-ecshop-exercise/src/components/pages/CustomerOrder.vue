@@ -27,10 +27,10 @@
                 {{ item.origin_price }} 元
               </div>
               <del class="h6" v-if="item.price"
-                >原價 {{ item.origin_price }} 元</del
+                >原價 {{ currency(item.origin_price) }} 元</del
               >
               <div class="h5" v-if="item.price">
-                現在只要 {{ item.price }} 元
+                現在只要 {{ currency(item.price) }} 元
               </div>
             </div>
           </div>
@@ -93,18 +93,18 @@
                 {{ item.qty }}/{{ item.product.unit }}
               </td>
               <td class="align-middle">
-                {{ item.product.price }}
+                {{ currency(item.product.price) }}
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="3" class="text-right">總計</td>
-              <td class="text-right">{{ cart.total }}</td>
+              <td class="text-right">{{ currency(cart.total) }}</td>
             </tr>
             <tr v-if="cart.final_total !== cart.total">
               <td colspan="3" class="text-right text-success">折扣價</td>
-              <td class="text-right text-success">{{ cart.final_total }}</td>
+              <td class="text-right text-success">{{ currency(cart.final_total) }}</td>
             </tr>
           </tfoot>
         </table>
