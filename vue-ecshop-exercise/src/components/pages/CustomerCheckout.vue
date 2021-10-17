@@ -73,25 +73,23 @@ export default ({
         getOrder() {
             this.isLoading = true;
 
-            let self = this;
             const api = userApiUrl.getOrder(this.orderId);
             this.$http.get(api).then((response) => {
                 console.log(response.data);
                 this.order = response.data.order;
-                self.isLoading = false;
+                this.isLoading = false;
             });
         },
-        payOrder() {
+        payOrder() { 
             this.isLoading = true;
 
-            let self = this;
             const api = userApiUrl.payOrder(this.orderId);
             this.$http.post(api).then((response) => {
                 console.log(response.data);
                 if (response.data.success) {
                     this.getOrder();
                 }
-                self.isLoading = false;
+                this.isLoading = false;
             });
         },
     },
