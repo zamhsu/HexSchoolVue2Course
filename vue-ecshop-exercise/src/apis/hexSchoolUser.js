@@ -19,5 +19,11 @@ export default {
     },
     addToOrder() {
         return `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/order`;
+    },
+    getOrder(id) {
+        return `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/order/${id}`;
+    },
+    payOrder(id) {
+        return `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_CUSTOM_PATH}/pay/${id}`;
     }
 }

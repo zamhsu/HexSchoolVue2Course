@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
 import CustomerOrder from '@/components/pages/CustomerOrder';
+import CustomerCheckout from '@/components/pages/CustomerCheckout';
 
 export const router = createRouter({
     history: createWebHashHistory(),
@@ -46,6 +47,11 @@ export const router = createRouter({
                     path: 'customer-order',
                     name: 'CustomerOrder',
                     component: CustomerOrder,
+                },
+                {
+                    path: 'customer-checkout/:orderId',
+                    name: 'CustomerCheckout',
+                    component: CustomerCheckout,
                 },
             ]
         },
