@@ -31,11 +31,10 @@
             <i class="fas fa-gift"></i>
             產品列表
           </router-link>
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
+          <router-link to="/admin/orders" active-class="active" class="nav-link">
             <i class="fas fa-list-ul"></i>
             訂單列表
-          </a>
+          </router-link>
           <a class="nav-link" href="#">
             <span data-feather="file-text"></span>
             <i class="fas fa-ticket-alt"></i>

@@ -14,6 +14,7 @@ import App from './App.vue';
 import { router } from './router';
 import eventBus from './eventBus';
 import currencyFilter from './filters/currency';
+import dateFilter from './filters/date';
 
 // Vee-Validate
 configure({
@@ -34,6 +35,7 @@ app.component("ErrorMessage", ErrorMessage);
 // 自定義全域變數
 app.config.globalProperties.eventBus = eventBus;
 app.config.globalProperties.currency = currencyFilter;
+app.config.globalProperties.date = dateFilter;
 app.mount('#app');
 
 // 導航守衛 Navigation Guards

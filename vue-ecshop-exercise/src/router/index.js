@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
+import Orders from '@/components/pages/Orders';
 import CustomerOrder from '@/components/pages/CustomerOrder';
 import CustomerCheckout from '@/components/pages/CustomerCheckout';
 
@@ -34,6 +35,12 @@ export const router = createRouter({
                     path: 'products',
                     name: 'Products',
                     component: Products,
+                    meta: { requiredAuth: true },
+                },
+                {
+                    path: 'orders',
+                    name: 'Orders',
+                    component: Orders,
                     meta: { requiredAuth: true },
                 },
             ]
