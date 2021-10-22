@@ -26,10 +26,7 @@ export default({
     },
     created() {
       // 取得JWT Token 並放到header的Authorization中
-      const authToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('hexToken='))
-        .split('=')[1];
+      const authToken = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
       this.$http.defaults.headers.common['Authorization'] = authToken;
     },
 })

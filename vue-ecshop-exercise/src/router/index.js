@@ -13,7 +13,9 @@ export const router = createRouter({
     routes: [
         {
             path: '/:pathMatch(.*)*', // 非路由設定的頁面
-            redirect: '/login' // 重新導向
+            redirect: {
+                name: 'Login'
+            } // 重新導向
         },
         // {
         //     path: '/', // 路徑儘量小寫
@@ -46,7 +48,7 @@ export const router = createRouter({
             ]
         },
         {
-            path: '/',
+            path: '/simulator',
             name: 'Simulator',
             component: Dashboard,
             children: [

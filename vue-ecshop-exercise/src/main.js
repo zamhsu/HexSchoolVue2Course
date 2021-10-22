@@ -50,7 +50,7 @@ router.beforeEach((to, from, next) => {
             } else {
                 // 未登入，轉到登入頁
                 next({
-                    path: './login'
+                    path: '/login'
                 });
             }
         });

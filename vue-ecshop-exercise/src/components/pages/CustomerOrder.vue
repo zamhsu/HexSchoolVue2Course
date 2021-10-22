@@ -462,7 +462,7 @@ export default {
       this.$http.post(api, { data: self.orderForm }).then((response) => {
         console.log(response.data);
         if (response.data.success) {
-          this.$router.push(`/customer-checkout/${response.data.orderId}`);
+          this.$router.push(`/simulator/customer-checkout/${response.data.orderId}`);
         }
         //this.getCart();
         self.isLoading = false;
