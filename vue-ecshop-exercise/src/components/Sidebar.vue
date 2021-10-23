@@ -35,11 +35,10 @@
             <i class="fas fa-list-ul"></i>
             訂單列表
           </router-link>
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
+          <router-link to="/admin/coupons" active-class="active" class="nav-link">
             <i class="fas fa-ticket-alt"></i>
             優惠券
-          </a>
+          </router-link>
         </li>
       </ul>
 

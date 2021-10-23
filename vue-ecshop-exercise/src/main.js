@@ -16,6 +16,8 @@ import eventBus from './eventBus';
 import currencyFilter from './filters/currency';
 import dateFilter from './filters/date';
 
+import './extensions/string';
+
 // Vee-Validate
 configure({
     generateMessage: localize("zh_TW", zh_TW),

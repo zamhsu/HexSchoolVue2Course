@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
 import Orders from '@/components/pages/Orders';
+import Coupons from '@/components/pages/Coupons';
 import CustomerOrder from '@/components/pages/CustomerOrder';
 import CustomerCheckout from '@/components/pages/CustomerCheckout';
 
@@ -43,6 +44,12 @@ export const router = createRouter({
                     path: 'orders',
                     name: 'Orders',
                     component: Orders,
+                    meta: { requiredAuth: true },
+                },
+                {
+                    path: 'coupons',
+                    name: 'Coupons',
+                    component: Coupons,
                     meta: { requiredAuth: true },
                 },
             ]
